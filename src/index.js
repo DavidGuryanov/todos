@@ -8,60 +8,134 @@ import "./components/main/main.css";
 import "./index.css";
 
 export default class App extends Component {
+  currentId = 1;
+  elementsIndex(arr, id) {
+    return arr.findIndex((el) => el.id === id);
+  }
+  createTodoItem(text, status = "active", hide = false) {
+    return {
+      status: status,
+      description: text,
+      created: +new Date() - 17000,
+      id: this.currentId++,
+      hidden: hide,
+    };
+  }
+  addItem = (text, status = "active", hide) => {
+    this.setState(({ tasksArr }) => {
+      const newTasksArray = [...this.state.tasksArr];
+      newTasksArray.push(this.createTodoItem(text, (status = "active")));
+      return {
+        tasksArr: newTasksArray,
+      };
+    });
+  };
   state = {
     tasksArr: [
-      {
-        status: "completed",
-        description: "Completed task",
-        created: +new Date() - 17000,
-        id: 1,
-      },
-      {
-        status: "editing",
-        description: "Editing task",
-        created: +new Date(),
-        id: 2,
-      },
-      {
-        status: "active",
-        description: "Active task",
-        created: +new Date() - 300000,
-        id: 3,
-      },
+      this.createTodoItem("Completed task", "completed"),
+      this.createTodoItem("Editing task", "editing"),
+      this.createTodoItem("Active task"),
     ],
   };
 
   deleteItem = (id) => {
+    const index = this.elementsIndex(this.state.tasksArr, id);
     this.setState(({ tasksArr }) => {
       const newTasksArray = [...this.state.tasksArr];
-      newTasksArray.splice(id - 1, 1);
+      newTasksArray.splice(index, 1);
       return {
         tasksArr: newTasksArray,
       };
     });
   };
   markItem = (id) => {
+    const index = this.elementsIndex(this.state.tasksArr, id);
     this.setState(({ tasksArr }) => {
       const newTasksArray = [...this.state.tasksArr];
-      newTasksArray[id - 1].status === "active"
-        ? (newTasksArray[id - 1].status = "completed")
-        : (newTasksArray[id - 1].status = "active");
+      newTasksArray[index].status === "active"
+        ? (newTasksArray[index].status = "completed")
+        : (newTasksArray[index].status = "active");
       return {
         tasksArr: newTasksArray,
       };
     });
   };
+  showCompleted = () => {
+    this.setState(({ tasksArr }) => {
+      const newTasksArray = [...this.state.tasksArr];
+      return {
+        tasksArr: newTasksArray.map(function (el) {
+          if (el.status !== "completed") {
+            el.hidden = true;
+          } else {
+            el.hidden = false;
+          }
+          return el;
+        }),
+      };
+    });
+  };
+  showActive = () => {
+    this.setState(({ tasksArr }) => {
+      const newTasksArray = [...this.state.tasksArr];
+      return {
+        tasksArr: newTasksArray.map(function (el) {
+          if (el.status !== "active") {
+            el.hidden = true;
+          } else {
+            el.hidden = false;
+          }
+          return el;
+        }),
+      };
+    });
+  };
+  showAll = () => {
+    this.setState(({ tasksArr }) => {
+      const newTasksArray = [...this.state.tasksArr];
+      return {
+        tasksArr: newTasksArray.map(function (el) {
+          el.hidden = false;
+          return el;
+        }),
+      };
+    });
+  };
+  clearCompleted = () => {
+    this.setState(({ tasksArr }) => {
+      const newTasksArray = [...this.state.tasksArr];
+      const test = newTasksArray.filter((el) => el.status !== "completed");
+      console.log(test);
+      return { tasksArr: test };
+      // return {
+      //   tasksArr: newTasksArray.map(function (el) {
+      //     if (el.status !== "completed") {
+      //       return el;
+      //     }
+      //   }),
+      // };
+    });
+  };
   render() {
+    const itemsLeftCount = this.state.tasksArr.filter(
+      (el) => el.status === "active"
+    ).length;
     return (
       <section className="todoapp">
-        <Header />
+        <Header onNewTask={this.addItem} />
         <section className="main">
           <TaskList
             tasks={this.state.tasksArr}
             onDelete={this.deleteItem}
             onMark={this.markItem}
           />
-          <Footer />
+          <Footer
+            itemsLeft={itemsLeftCount}
+            filterCompleted={this.showCompleted}
+            filterActive={this.showActive}
+            filterAll={this.showAll}
+            removeCompleted={this.clearCompleted}
+          />
         </section>
       </section>
     );

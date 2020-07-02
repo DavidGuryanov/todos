@@ -5,13 +5,14 @@ import "./task.css";
 export default class Task extends Component {
   render() {
     const { properties, onDelete, onMark } = this.props;
-    const { status: tasktype, description, created, id } = properties;
+    const { status: tasktype, description, created, id, hidden } = properties;
     const time = formatDistanceToNow(created, {
       addSuffix: true,
       includeSeconds: true,
     });
+    const liClasses = `${tasktype} ${hidden ? "hidden" : ""}`;
     return (
-      <li className={tasktype}>
+      <li className={liClasses}>
         <div className="view">
           <input
             className="toggle"
