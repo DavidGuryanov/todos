@@ -1,8 +1,9 @@
-import React from "react";
-import NewTaskForm from "../newTaskForm/new-task-form";
-import PropTypes from "prop-types";
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import PropTypes from 'prop-types';
+import NewTaskForm from '../newTaskForm/new-task-form';
 
-import "./header.css";
+import './header.css';
 
 const Header = ({ onNewTask }) => {
   return (

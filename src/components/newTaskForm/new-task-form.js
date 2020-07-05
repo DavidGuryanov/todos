@@ -1,35 +1,40 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+/* eslint-disable react/jsx-filename-extension */
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import "./new-task-form.css";
+import './new-task-form.css';
 
 export default class NewTaskForm extends Component {
   static propTypes = {
     onNewTask: PropTypes.func,
   };
+
   static defaultProps = {
     onNewTask: () => {},
   };
+
   state = {
-    newEntry: "",
+    newEntry: '',
   };
-  onNewEntry = (e) => {
-    this.setState({ newEntry: e.target.value });
+
+  onNewEntry = (evt) => {
+    this.setState({ newEntry: evt.target.value });
   };
+
   render() {
+    const { newEntry } = this.state;
     const { onNewTask } = this.props;
 
     return (
       <input
         className="new-todo"
         placeholder="What needs to be done?"
-        autoFocus
         onChange={this.onNewEntry}
-        value={this.state.newEntry}
-        onKeyUp={(e) => {
-          if (e.keyCode === 13 && this.state.newEntry.length > 0) {
-            onNewTask(this.state.newEntry);
-            this.setState({ newEntry: "" });
+        value={newEntry}
+        onKeyUp={(evt) => {
+          if (evt.keyCode === 13 && newEntry.length > 0) {
+            onNewTask(newEntry);
+            this.setState({ newEntry: '' });
           }
         }}
       />

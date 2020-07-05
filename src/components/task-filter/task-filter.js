@@ -1,15 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import "./task-filter.css";
+import './task-filter.css';
 
-function changeSelectedClass(e) {
-  let buttonsArray = document.querySelectorAll(".filters li button");
-  buttonsArray.forEach(function (el) {
-    if (el !== e.target && el.classList.contains("selected")) {
-      el.classList.remove("selected");
-    } else if (el === e.target && !el.classList.contains("selected")) {
-      el.classList.add("selected");
+function changeSelectedClass(evt) {
+  const buttonsArray = document.querySelectorAll('.filters li button');
+  buttonsArray.forEach((el) => {
+    if (el !== evt.target && el.classList.contains('selected')) {
+      el.classList.remove('selected');
+    } else if (el === evt.target && !el.classList.contains('selected')) {
+      el.classList.add('selected');
     }
   });
 }
@@ -20,22 +21,17 @@ const TaskFilter = ({ filterCompleted, filterActive, filterAll }) => {
   return (
     <ul className="filters">
       <li>
-        <button
-          className="selected"
-          onClick={(e) => filter(changeSelectedClass(e), filterAll)}
-        >
+        <button type="button" className="selected" onClick={(evt) => filter(changeSelectedClass(evt), filterAll)}>
           All
         </button>
       </li>
       <li>
-        <button onClick={(e) => filter(changeSelectedClass(e), filterActive)}>
+        <button type="button" onClick={(evt) => filter(changeSelectedClass(evt), filterActive)}>
           Active
         </button>
       </li>
       <li>
-        <button
-          onClick={(e) => filter(changeSelectedClass(e), filterCompleted)}
-        >
+        <button type="button" onClick={(evt) => filter(changeSelectedClass(evt), filterCompleted)}>
           Completed
         </button>
       </li>
@@ -46,12 +42,10 @@ TaskFilter.defaultProps = {
   filterCompleted: () => {},
   filterActive: () => {},
   filterAll: () => {},
-  removeCompleted: () => {},
 };
 TaskFilter.propTypes = {
   filterCompleted: PropTypes.func,
   filterActive: PropTypes.func,
   filterAll: PropTypes.func,
-  removeCompleted: PropTypes.func,
 };
 export default TaskFilter;
