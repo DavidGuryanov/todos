@@ -35,10 +35,23 @@ export default class App extends Component {
       const index = this.elementsIndex(tasksArr, id);
       const newTasksArray = [...tasksArr];
       if (tasksArr[index].status !== 'completed') {
-        newTasksArray[index].status = 'editing';
+        const copy = { ...newTasksArray[index] };
+        copy.status = 'editing';
+        newTasksArray[index] = copy;
         return { tasksArr: newTasksArray };
       }
       return {};
+    });
+  };
+
+  changeText = (id, text) => {
+    this.setState(({ tasksArr }) => {
+      const index = this.elementsIndex(tasksArr, id);
+      const newTasksArray = [...tasksArr];
+      const copy = { ...newTasksArray[index] };
+      copy.description = text;
+      newTasksArray[index] = copy;
+      return { tasksArr: newTasksArray };
     });
   };
 
@@ -46,17 +59,14 @@ export default class App extends Component {
     this.setState(({ tasksArr }) => {
       const index = this.elementsIndex(tasksArr, id);
       const newTasksArray = [...tasksArr];
-
+      const copy = { ...newTasksArray[index] };
       if (newTasksArray[index].status === 'active') {
-        newTasksArray[index].status = 'completed';
+        copy.status = 'completed';
+        newTasksArray[index] = copy;
       } else {
-        newTasksArray[index].status = 'active';
+        copy.status = 'active';
+        newTasksArray[index] = copy;
       }
-
-      // newTasksArray[index].status === "active"
-      //   ? (newTasksArray[index].status = "completed")
-      //   : (newTasksArray[index].status = "active");
-
       return {
         tasksArr: newTasksArray,
       };
@@ -150,7 +160,13 @@ export default class App extends Component {
       <section className="todoapp">
         <Header onNewTask={this.addItem} />
         <section className="main">
-          <TaskList tasks={tasksArr} onDelete={this.deleteItem} onChange={this.changeItem} onMark={this.markItem} />
+          <TaskList
+            tasks={tasksArr}
+            onDelete={this.deleteItem}
+            onChange={this.changeItem}
+            onMark={this.markItem}
+            onChangeText={this.changeText}
+          />
           <Footer
             itemsLeft={itemsLeftCount}
             filterCompleted={this.showCompleted}

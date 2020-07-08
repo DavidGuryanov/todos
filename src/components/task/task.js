@@ -19,16 +19,17 @@ export default class Task extends Component {
     onDelete: PropTypes.func,
     onChange: PropTypes.func,
     onMark: PropTypes.func,
+    onChangeText: PropTypes.func,
   };
 
   static defaultProps = {
     onDelete: () => {},
     onChange: () => {},
     onMark: () => {},
+    onChangeText: () => {},
   };
 
   state = {
-    changedEntry: '',
     date: new Date(),
   };
 
@@ -40,12 +41,6 @@ export default class Task extends Component {
     clearInterval(this.timerID);
   }
 
-  newValue = (evt) => {
-    this.setState({ changedEntry: evt.target.value });
-    const { properties } = this.props;
-    properties.description = evt.target.value;
-  };
-
   tick() {
     this.setState({
       date: new Date(),
@@ -53,7 +48,7 @@ export default class Task extends Component {
   }
 
   render() {
-    const { properties, onDelete, onChange, onMark } = this.props;
+    const { properties, onDelete, onChange, onMark, onChangeText } = this.props;
     const { status: tasktype, description, created, id, hidden } = properties;
     const time = formatDistanceToNow(created, {
       addSuffix: true,
@@ -81,7 +76,7 @@ export default class Task extends Component {
             type="text"
             className="edit"
             value={description}
-            onChange={this.newValue}
+            onChange={(evt) => onChangeText(id, evt.target.value)}
             onKeyUp={(evt) => {
               if (evt.keyCode === 13) {
                 onMark(id);
