@@ -13,9 +13,9 @@ export default class App extends Component {
 
   state = {
     tasksArr: [
-      this.createTodoItem('Completed task', 'completed', new Date()),
-      this.createTodoItem('Editing task', 'editing', new Date()),
-      this.createTodoItem('Active task'),
+      // this.createTodoItem('Completed task', 'completed', new Date()),
+      // this.createTodoItem('Editing task', 'editing', new Date()),
+      // this.createTodoItem('Active task'),
     ],
   };
 
@@ -128,17 +128,26 @@ export default class App extends Component {
     });
   };
 
-  addItem = (text) => {
+  addItem = (text, ms) => {
+    // eslint-disable-next-line no-unused-vars
+    const timer = setTimeout(() => console.log('now'), ms);
     this.setState(({ tasksArr }) => {
       const newTasksArray = [...tasksArr];
-      newTasksArray.push(this.createTodoItem(text));
+      newTasksArray.push(this.createTodoItem(text, 'active', new Date(), ms));
       return {
         tasksArr: newTasksArray,
       };
     });
   };
 
-  createTodoItem(text, status = 'active', date = new Date()) {
+  getInterval = () => {};
+
+  createTimer = (func, ms) => {
+    // eslint-disable-next-line no-unused-vars
+    const timer = setTimeout(func, ms);
+  };
+
+  createTodoItem(text, status = 'active', date = new Date(), ms = 5000) {
     this.currentId += 1;
     return {
       status,
@@ -146,6 +155,7 @@ export default class App extends Component {
       created: date,
       id: this.currentId,
       hidden: false,
+      timer: ms,
     };
   }
 
@@ -166,6 +176,7 @@ export default class App extends Component {
             onChange={this.changeItem}
             onMark={this.markItem}
             onChangeText={this.changeText}
+            onCreateTimer={this.createTimer}
           />
           <Footer
             itemsLeft={itemsLeftCount}

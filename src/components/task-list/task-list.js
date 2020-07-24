@@ -5,7 +5,7 @@ import Task from '../task/task';
 
 import './task-list.css';
 
-const TaskList = ({ tasks, onDelete, onChange, onMark, onChangeText }) => {
+const TaskList = ({ tasks, onDelete, onChange, onMark, onChangeText, onCreateTimer }) => {
   const tasksList = tasks.map((item) => {
     return (
       <Task
@@ -15,6 +15,7 @@ const TaskList = ({ tasks, onDelete, onChange, onMark, onChangeText }) => {
         onChange={onChange}
         onMark={onMark}
         onChangeText={onChangeText}
+        onCreateTimer={onCreateTimer}
       />
     );
   });
@@ -27,6 +28,7 @@ TaskList.defaultProps = {
   onChange: () => {},
   onMark: () => {},
   onChangeText: () => {},
+  onCreateTimer: () => {},
 };
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -34,6 +36,7 @@ TaskList.propTypes = {
   onChange: PropTypes.func,
   onMark: PropTypes.func,
   onChangeText: PropTypes.func,
+  onCreateTimer: PropTypes.func,
 };
 
 export default TaskList;

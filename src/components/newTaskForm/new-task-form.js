@@ -7,10 +7,12 @@ import './new-task-form.css';
 export default class NewTaskForm extends Component {
   static propTypes = {
     onNewTask: PropTypes.func,
+    time: PropTypes.number,
   };
 
   static defaultProps = {
     onNewTask: () => {},
+    time: 0,
   };
 
   state = {
@@ -23,7 +25,7 @@ export default class NewTaskForm extends Component {
 
   render() {
     const { newEntry } = this.state;
-    const { onNewTask } = this.props;
+    const { onNewTask, time } = this.props;
 
     return (
       <input
@@ -33,7 +35,7 @@ export default class NewTaskForm extends Component {
         value={newEntry}
         onKeyUp={(evt) => {
           if (evt.keyCode === 13 && newEntry.length > 0) {
-            onNewTask(newEntry);
+            onNewTask(newEntry, time);
             this.setState({ newEntry: '' });
           }
         }}
