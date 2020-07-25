@@ -12,8 +12,12 @@
   cursor: pointer;
 }
 
-.todo-list li .icon:hover {
+/* .todo-list li .icon:hover {
   color: #af5b5e;
+} */
+
+.icon-pause:hover {
+  color: red !important;
 }
 
 .todo-list li .icon-destroy {

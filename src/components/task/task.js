@@ -11,9 +11,6 @@ import Timer from '../timer/timer';
 import './task.css';
 
 export default class Task extends Component {
-
-  
-  
   static propTypes = {
     properties: PropTypes.shape({
       status: PropTypes.string,
@@ -29,7 +26,6 @@ export default class Task extends Component {
     onChangeText: PropTypes.func,
   };
 
-
   static defaultProps = {
     onDelete: () => {},
     onChange: () => {},
@@ -37,22 +33,19 @@ export default class Task extends Component {
     onChangeText: () => {},
   };
 
-  constructor (props) {
-      super(props);
-      const {
-        properties: { timer },
-      } = this.props;
+  constructor(props) {
+    super(props);
+    const {
+      properties: { timer },
+    } = this.props;
 
-      this.state = {
-    ms: timer,
-    startDate: +new Date(),
-    leftSec: 0,
-    paused: false,
-  };
-    }
-
-  
-
+    this.state = {
+      ms: timer,
+      startDate: +new Date(),
+      leftSec: 0,
+      paused: false,
+    };
+  }
 
   componentDidMount() {
     const { ms } = this.state;
@@ -102,8 +95,8 @@ export default class Task extends Component {
   };
 
   resumeCD = () => {
-    const { paused, leftSec } = this.state;
-    if (paused) {
+    const { paused, leftSec, ms } = this.state;
+    if (paused && leftSec > 0) {
       this.setState(() => {
         return {
           paused: false,

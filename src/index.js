@@ -13,9 +13,9 @@ export default class App extends Component {
 
   state = {
     tasksArr: [
-      // this.createTodoItem('Completed task', 'completed', new Date()),
-      // this.createTodoItem('Editing task', 'editing', new Date()),
-      // this.createTodoItem('Active task'),
+      this.createTodoItem('Completed task', 'completed', new Date()),
+      this.createTodoItem('Editing task', 'editing', new Date()),
+      this.createTodoItem('Active task'),
     ],
   };
 
@@ -147,7 +147,7 @@ export default class App extends Component {
     const timer = setTimeout(func, ms);
   };
 
-  createTodoItem(text, status = 'active', date = new Date(), ms = 5000) {
+  createTodoItem(text, status = 'active', date = new Date(), ms = 0) {
     this.currentId += 1;
     return {
       status,
