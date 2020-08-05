@@ -1,45 +1,39 @@
 /* eslint-disable react/jsx-filename-extension */
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './new-task-form.css';
 
-export default class NewTaskForm extends Component {
-  static propTypes = {
-    onNewTask: PropTypes.func,
-    time: PropTypes.number,
+const NewTaskForm = (props) => {
+  const [newEntry, setNewEntry] = useState('');
+  const { onNewTask, time } = props;
+
+  const onNewEntry = (evt) => {
+    setNewEntry(evt.target.value);
   };
+  return (
+    <input
+      className="new-todo"
+      placeholder="What needs to be done?"
+      onChange={onNewEntry}
+      value={newEntry}
+      onKeyUp={(evt) => {
+        if (evt.keyCode === 13 && newEntry.length > 0) {
+          onNewTask(newEntry, time);
+          setNewEntry('');
+        }
+      }}
+    />
+  );
+};
 
-  static defaultProps = {
-    onNewTask: () => {},
-    time: 0,
-  };
+NewTaskForm.propTypes = {
+  onNewTask: PropTypes.func,
+  time: PropTypes.number,
+};
 
-  state = {
-    newEntry: '',
-  };
-
-  onNewEntry = (evt) => {
-    this.setState({ newEntry: evt.target.value });
-  };
-
-  render() {
-    const { newEntry } = this.state;
-    const { onNewTask, time } = this.props;
-
-    return (
-      <input
-        className="new-todo"
-        placeholder="What needs to be done?"
-        onChange={this.onNewEntry}
-        value={newEntry}
-        onKeyUp={(evt) => {
-          if (evt.keyCode === 13 && newEntry.length > 0) {
-            onNewTask(newEntry, time);
-            this.setState({ newEntry: '' });
-          }
-        }}
-      />
-    );
-  }
-}
+NewTaskForm.defaultProps = {
+  onNewTask: () => {},
+  time: 0,
+};
+export default NewTaskForm;

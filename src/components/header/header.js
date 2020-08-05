@@ -1,41 +1,34 @@
 /* eslint-disable react/jsx-filename-extension */
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import NewTaskForm from '../newTaskForm/new-task-form';
 import InitiateTimer from '../initiate-timer/initiateTimer';
 
 import './header.css';
 
-export default class Header extends Component {
-  state = {
-    min: 0,
-    sec: 0,
+const Header = (props) => {
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setseconds] = useState(0);
+
+  const passMin = (min) => {
+    setMinutes(min);
   };
 
-  passMin = (minutes) => {
-    this.setState({ min: minutes });
+  const passSec = (sec) => {
+    setseconds(sec);
   };
 
-  passSec = (seconds) => {
-    this.setState({ sec: seconds });
-  };
-
-  render() {
-    const { onNewTask } = this.props;
-    const { sec, min } = this.state;
-
-    return (
-      <header className="header">
-        <form className="new-todo-form">
-          <h1>todos</h1>
-          <NewTaskForm onNewTask={onNewTask} time={sec + min} />
-
-          <InitiateTimer passMin={this.passMin} passSec={this.passSec} test={this.test} />
-        </form>
-      </header>
-    );
-  }
-}
+  const { onNewTask } = props;
+  return (
+    <header className="header">
+      <form className="new-todo-form">
+        <h1>todos</h1>
+        <NewTaskForm onNewTask={onNewTask} time={seconds + minutes} />
+        <InitiateTimer passMin={passMin} passSec={passSec} />
+      </form>
+    </header>
+  );
+};
 
 Header.defaultProps = {
   onNewTask: () => {},
@@ -43,3 +36,5 @@ Header.defaultProps = {
 Header.propTypes = {
   onNewTask: PropTypes.func,
 };
+
+export default Header;

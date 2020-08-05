@@ -1,64 +1,75 @@
 /* eslint-disable react/jsx-filename-extension */
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-
 import Header from './components/header/header';
 import TaskList from './components/task-list/task-list';
 import Footer from './components/footer/footer';
 import './components/main/main.css';
 import './index.css';
 
-export default class App extends Component {
-  currentId = 1;
+const App = () => {
+  let currentId = 1;
 
-  state = {
-    tasksArr: [
-      this.createTodoItem('Completed task', 'completed', new Date()),
-      this.createTodoItem('Editing task', 'editing', new Date()),
-      this.createTodoItem('Active task'),
-    ],
+  const createTodoItem = (text, status = 'active', date = new Date(), ms = 0) => {
+    currentId += 1;
+    return {
+      status,
+      description: text,
+      created: date,
+      id: currentId,
+      hidden: false,
+      timer: ms,
+    };
   };
 
-  deleteItem = (id) => {
-    this.setState(({ tasksArr }) => {
-      const index = this.elementsIndex(tasksArr, id);
-      const newTasksArray = [...tasksArr];
+  const elementsIndex = (arr, id) => {
+    return arr.findIndex((el) => el.id === id);
+  };
+
+  const [tasksArray, setTasksArray] = useState([
+    createTodoItem('Completed task', 'completed', new Date()),
+    createTodoItem('Editing task', 'editing', new Date()),
+    createTodoItem('Active task'),
+  ]);
+
+  const deleteItem = (id) => {
+    setTasksArray(() => {
+      const index = elementsIndex(tasksArray, id);
+      const newTasksArray = [...tasksArray];
       newTasksArray.splice(index, 1);
-      return {
-        tasksArr: newTasksArray,
-      };
+      return newTasksArray;
     });
   };
 
-  changeItem = (id) => {
-    this.setState(({ tasksArr }) => {
-      const index = this.elementsIndex(tasksArr, id);
-      const newTasksArray = [...tasksArr];
-      if (tasksArr[index].status !== 'completed') {
+  const changeItem = (id) => {
+    setTasksArray(() => {
+      const index = elementsIndex(tasksArray, id);
+      const newTasksArray = [...tasksArray];
+      if (tasksArray[index].status !== 'completed') {
         const copy = { ...newTasksArray[index] };
         copy.status = 'editing';
         newTasksArray[index] = copy;
-        return { tasksArr: newTasksArray };
+        return newTasksArray;
       }
       return {};
     });
   };
 
-  changeText = (id, text) => {
-    this.setState(({ tasksArr }) => {
-      const index = this.elementsIndex(tasksArr, id);
-      const newTasksArray = [...tasksArr];
+  const changeText = (id, text) => {
+    setTasksArray(() => {
+      const index = elementsIndex(tasksArray, id);
+      const newTasksArray = [...tasksArray];
       const copy = { ...newTasksArray[index] };
       copy.description = text;
       newTasksArray[index] = copy;
-      return { tasksArr: newTasksArray };
+      return newTasksArray;
     });
   };
 
-  markItem = (id) => {
-    this.setState(({ tasksArr }) => {
-      const index = this.elementsIndex(tasksArr, id);
-      const newTasksArray = [...tasksArr];
+  const markItem = (id) => {
+    setTasksArray(() => {
+      const index = elementsIndex(tasksArray, id);
+      const newTasksArray = [...tasksArray];
       const copy = { ...newTasksArray[index] };
       if (newTasksArray[index].status === 'active') {
         copy.status = 'completed';
@@ -67,128 +78,102 @@ export default class App extends Component {
         copy.status = 'active';
         newTasksArray[index] = copy;
       }
-      return {
-        tasksArr: newTasksArray,
-      };
+      return newTasksArray;
     });
   };
 
-  showCompleted = () => {
-    this.setState(({ tasksArr }) => {
-      const newTasksArray = [...tasksArr];
-      return {
-        tasksArr: newTasksArray.map((el) => {
-          const stupidLint = el;
-          if (stupidLint.status !== 'completed') {
-            stupidLint.hidden = true;
-          } else {
-            stupidLint.hidden = false;
-          }
-          return stupidLint;
-        }),
-      };
-    });
-  };
-
-  showActive = () => {
-    this.setState(({ tasksArr }) => {
-      const newTasksArray = [...tasksArr];
-      return {
-        tasksArr: newTasksArray.map((el) => {
-          const stupidLint = el;
-          if (stupidLint.status !== 'active') {
-            stupidLint.hidden = true;
-          } else {
-            stupidLint.hidden = false;
-          }
-          return stupidLint;
-        }),
-      };
-    });
-  };
-
-  showAll = () => {
-    this.setState(({ tasksArr }) => {
-      const newTasksArray = [...tasksArr];
-      return {
-        tasksArr: newTasksArray.map((el) => {
-          const stupidLint = el;
+  const showCompleted = () => {
+    setTasksArray(() => {
+      const newTasksArray = [...tasksArray];
+      const result = newTasksArray.map((el) => {
+        const stupidLint = el;
+        if (stupidLint.status !== 'completed') {
+          stupidLint.hidden = true;
+        } else {
           stupidLint.hidden = false;
-          return stupidLint;
-        }),
-      };
+        }
+        return stupidLint;
+      });
+      return result;
     });
   };
 
-  clearCompleted = () => {
-    this.setState(({ tasksArr }) => {
-      const newTasksArray = [...tasksArr];
-      const test = newTasksArray.filter((el) => el.status !== 'completed');
-      return { tasksArr: test };
+  const showActive = () => {
+    setTasksArray(() => {
+      const newTasksArray = [...tasksArray];
+      const result = newTasksArray.map((el) => {
+        const stupidLint = el;
+        if (stupidLint.status !== 'active') {
+          stupidLint.hidden = true;
+        } else {
+          stupidLint.hidden = false;
+        }
+        return stupidLint;
+      });
+      return result;
     });
   };
 
-  addItem = (text, ms) => {
+  const showAll = () => {
+    setTasksArray(() => {
+      const newTasksArray = [...tasksArray];
+      const result = newTasksArray.map((el) => {
+        const stupidLint = el;
+        stupidLint.hidden = false;
+        return stupidLint;
+      });
+      return result;
+    });
+  };
+
+  const clearCompleted = () => {
+    setTasksArray(() => {
+      const newTasksArray = [...tasksArray];
+      const result = newTasksArray.filter((el) => el.status !== 'completed');
+      return result;
+    });
+  };
+
+  const addItem = (text, ms) => {
     // eslint-disable-next-line no-unused-vars
     const timer = setTimeout(() => console.log('now'), ms);
-    this.setState(({ tasksArr }) => {
-      const newTasksArray = [...tasksArr];
-      newTasksArray.push(this.createTodoItem(text, 'active', new Date(), ms));
-      return {
-        tasksArr: newTasksArray,
-      };
+    setTasksArray(() => {
+      const newTasksArray = [...tasksArray];
+      newTasksArray.push(createTodoItem(text, 'active', new Date(), ms));
+      return newTasksArray;
     });
   };
 
-  getInterval = () => {};
+  // getInterval = () => {};
 
-  createTimer = (func, ms) => {
+  const createTimer = (func, ms) => {
     // eslint-disable-next-line no-unused-vars
     const timer = setTimeout(func, ms);
   };
 
-  createTodoItem(text, status = 'active', date = new Date(), ms = 0) {
-    this.currentId += 1;
-    return {
-      status,
-      description: text,
-      created: date,
-      id: this.currentId,
-      hidden: false,
-      timer: ms,
-    };
-  }
-
-  elementsIndex(arr, id) {
-    return arr.findIndex((el) => el.id === id);
-  }
-
-  render() {
-    const { tasksArr } = this.state;
-    const itemsLeftCount = tasksArr.filter((el) => el.status === 'active').length;
-    return (
-      <section className="todoapp">
-        <Header onNewTask={this.addItem} />
-        <section className="main">
-          <TaskList
-            tasks={tasksArr}
-            onDelete={this.deleteItem}
-            onChange={this.changeItem}
-            onMark={this.markItem}
-            onChangeText={this.changeText}
-            onCreateTimer={this.createTimer}
-          />
-          <Footer
-            itemsLeft={itemsLeftCount}
-            filterCompleted={this.showCompleted}
-            filterActive={this.showActive}
-            filterAll={this.showAll}
-            removeCompleted={this.clearCompleted}
-          />
-        </section>
+  const itemsLeftCount = tasksArray.filter((el) => el.status === 'active').length;
+  return (
+    <section className="todoapp">
+      <Header onNewTask={addItem} />
+      <section className="main">
+        <TaskList
+          tasks={tasksArray}
+          onDelete={deleteItem}
+          onChange={changeItem}
+          onMark={markItem}
+          onChangeText={changeText}
+          onCreateTimer={createTimer}
+        />
+        <Footer
+          itemsLeft={itemsLeftCount}
+          filterCompleted={showCompleted}
+          filterActive={showActive}
+          filterAll={showAll}
+          removeCompleted={clearCompleted}
+        />
       </section>
-    );
-  }
-}
+    </section>
+  );
+};
 
 ReactDOM.render(<App />, document.querySelector('.root'));
